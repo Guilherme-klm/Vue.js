@@ -10,13 +10,22 @@
 
     <div id='app'>
         <p> {{mensagem}} </p>
-        <p> Meu nome é : <span v-once v-text="nome"> </span> </p>
+        <p v-once> Meu nome é : {{nome}}  </p>
         <input v-on:input="mudarNome"> <!-- Passa um método para pegar o valor do nome -->
         <p> <a v-bind:href="docs"> Vue.js </a> </p> <!-- acessando site com um link do atributo docs -->    
         
         <p v-once> Nome: {{ nome }} </p> <!-- O valor nao muda com o v-once-->
         <p> Nome inteiro: {{ getNome() }} </p>
         <p v-html="htmlPuro"> </p> <!--transforma em html puro -->
+
+        <button v-on:click="incrementar"> Clique aqui </button> <!-- manipula os clique com o v-on-->
+        <p> Botao clicado {{cliques}} vezes </p>
+        <p v-on:mousemove="incrementarCoordenadas"> Coordenadas X: {{ x }} e Coordenadas Y: {{ y }} </p> 
+        <!-- ao passar o mouse nas letras ele vai dizendo as coordenadas-->
+
+        <input v-on:blur="exibirNome('Meu nome é: ', $event)">
+        <p> {{ nome2 }}</p>
+
         
     </div>
 
@@ -28,7 +37,11 @@
                 mensagem: "Olá, Vue!",
                 nome: "Guilherme",
                 docs: "https://br.vuejs.org/v2/guide/index.html",
-                htmlPuro: 'Curso de <span style="color: red"> Vue.Js </span>'
+                htmlPuro: 'Curso de <span style="color: red"> Vue.Js </span>',
+                cliques: 0,
+                x: '',
+                y: '',
+                nome2: ''
             },
             methods: {
                 mudarNome: function(event) {
@@ -37,6 +50,16 @@
                 getNome: function() {
                     this.nome = "Guilherme Karam";
                     return this.nome;
+                },
+                incrementar: function(event) {
+                    this.cliques++;
+                },
+                incrementarCoordenadas: function(event) {
+                    this.x = event.x;
+                    this.y = event.y;
+                },
+                exibirNome: function(texto, event) {
+                    this.nome2 = texto + event.target.value;
                 }
             }
         });
