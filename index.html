@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Teste Vue.js </title>
+</head>
+<body>
+
+    <div id='app'>
+        <p> {{mensagem}} </p>
+        <p> Meu nome é : <span v-once v-text="nome"> </span> </p>
+        <input v-on:input="mudarNome"> <!-- Passa um método para pegar o valor do nome -->
+        <p> <a v-bind:href="docs"> Vue.js </a> </p> <!-- acessando site com um link do atributo docs -->    
+        
+        <p v-once> Nome: {{ nome }} </p> <!-- O valor nao muda com o v-once-->
+        <p> Nome inteiro: {{ getNome() }} </p>
+        <p v-html="htmlPuro"> </p> <!--transforma em html puro -->
+        
+    </div>
+
+    
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                mensagem: "Olá, Vue!",
+                nome: "Guilherme",
+                docs: "https://br.vuejs.org/v2/guide/index.html",
+                htmlPuro: 'Curso de <span style="color: red"> Vue.Js </span>'
+            },
+            methods: {
+                mudarNome: function(event) {
+                    this.nome = event.target.value;
+                },
+                getNome: function() {
+                    this.nome = "Guilherme Karam";
+                    return this.nome;
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
