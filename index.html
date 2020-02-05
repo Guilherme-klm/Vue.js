@@ -26,7 +26,46 @@
         <input v-on:blur="exibirNome('Meu nome é: ', $event)">
         <p> {{ nome2 }}</p>
 
+        <p v-on:click="onClick('p', $event)">
+            Curso Vue.js
+        <button v-on:click.stop="onClick('button', $event)"> CLique </button> <!--.stop não propaga até o elemento pai-->
+        </p>
+
+        <form>
+            <input type="text">
+            <button type="submit" v-on:click="onSubmit"> Enviar sem modificador </button>
+            <button type="submit" v-on:click.prevent="onSubmit"> Enviar com modificador </button>
+        </form>
+        <br>
+
+        <!-- Modificadores de tecla -->
+        <input v-on:keyup="onKey" placeholder="Qualquer teclas"> 
+        <br>
+        <input v-on:keyup.enter="onKey" placeholder="Tecla enter">
+        <br>
+        <input v-on:keyup.arrow-up="onKey" placeholder="Tecla para cima">
+        <br>
+        <input v-on:keyup.ctrl.enter.exact="onKey" placeholder="Somente as tecla ctrl + enter"> <!-- .exact pega somente as teclas desejadas -->
+        <br>
+
+        <!-- Modificadores do mouse -->
+        <p> <button v-on:click="modificadorMouse"> Botão esquerdo </button> 
+        <button v-on:click.middle="modificadorMouse"> Botão scroll </button> <!--.middle faz somente o botao do meio do mouse funcione -->
+        <button v-on:click.right="modificadorMouse"> Botão direito </button>
+        <button v-on:click.right.prevent="modificadorMouse"> Botão direito </button> <!-- .prevent deixa sem menu de contexto -->
+        </p>
         
+        <!-- Dados computados -->
+        <p> {{ mensagem }} => {{ mensagem.split('').reverse().join('') }} </p> <!-- .split pega as letras e poe num array e .join junta tudo -->
+        <p> {{ mensagem }} => {{ mensagemInvertida }}</p>
+        <input @keyup.enter="alterarMensagem">
+        <br>
+
+        <p> Mensagem: {{ mensagemCompleta }}</p>
+        <button @click="alterarMensagemCompleta"> Alterar Mensagem </button>
+
+        <p> Nome Completo: {{ nomeCompleto }}</p>
+        <input @keyup.enter="alterarNome">
     </div>
 
     
@@ -35,13 +74,41 @@
             el: '#app',
             data: {
                 mensagem: "Olá, Vue!",
+                primeiraMensagem: "Olá,",
+                ultimaMensagem: "Vue!",
+                mensagemCompleta: "Olá, Vue!",
                 nome: "Guilherme",
                 docs: "https://br.vuejs.org/v2/guide/index.html",
                 htmlPuro: 'Curso de <span style="color: red"> Vue.Js </span>',
                 cliques: 0,
                 x: '',
                 y: '',
-                nome2: ''
+                nome2: '',
+                primeiroNome: 'Guilherme',
+                ultimoNome: 'Karam'
+            },
+            computed: {
+                mensagemInvertida: function() {
+                    return this.mensagem.split('').reverse().join('');
+                },
+                nomeCompleto: {
+                    get: function() {
+                        return this.primeiroNome + ' ' + this.ultimoNome;
+                    },
+                    set: function(novoNome) {
+                        var nome = novoNome.split(' ') // quebrar a string quando tiver um espaço
+                        this.primeiroNome = nome[0];
+                        this.ultimoNome = nome[nome.length - 1];
+                    }
+                }
+            },
+            watch: {
+                mensagemCompleta: function(novaMensagemCompleta, antigaMensagemCompleta) {
+                    var vm = this;
+                    setTimeout(function() {
+                        vm.mensagemCompleta = 'Java é bem melhor!';
+                    }, 3000);
+                }
             },
             methods: {
                 mudarNome: function(event) {
@@ -60,7 +127,30 @@
                 },
                 exibirNome: function(texto, event) {
                     this.nome2 = texto + event.target.value;
+                },
+                onClick: function(elementoAlvo, event) {
+                    // event.stopPropagation(); Evento não se propaga até o elemento pai
+                    console.log(event.type, ' : ', elementoAlvo);
+                },
+                onSubmit: function() {
+                    console.log('Formulário Enviado!');
+                },
+                onKey: function(event) {
+                    console.log('Tecla', event.key, 'pressionada!');
+                },
+                modificadorMouse: function(event) {
+                    console.log('Botão ', event.button, ' pressionada!');
+                },
+                alterarMensagem: function(event) {
+                    this.mensagem = event.target.value;
+                },
+                alterarMensagemCompleta: function(event) {
+                    this.mensagemCompleta = 'GK';
+                },
+                alterarNome: function(event) {
+                    this.nomeCompleto = event.target.value;
                 }
+
             }
         });
 
