@@ -4,6 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        .caixa {
+            width: 200px;
+            height: 200px;
+            display: inline-block;
+            background-color: brown;
+        }
+        .coral {
+            background-color: cadetblue;
+        }
+        .verde {
+            background-color: green;
+        }
+        .azul {
+            background-color: blue;
+        }
+        .circulo {
+            border-radius: 100%;
+        }
+    </style>
+
     <title>Teste Vue.js </title>
 </head>
 <body>
@@ -66,6 +87,20 @@
 
         <p> Nome Completo: {{ nomeCompleto }}</p>
         <input @keyup.enter="alterarNome">
+
+        <div class="caixa" :class=" {coral: aplicarCor}" @click="aplicarCor = !aplicarCor">
+        </div>
+        <br>
+
+        <br>
+        <div class="caixa" :class="nomeDaClasse"></div>
+        <input v-model="nomeDaClasse" placeholder="Nome da Classe CSS">
+
+        <div class="caixa" :class="classesCSS" @click="aplicarCor = !aplicarCor"></div>
+        <br>
+
+        <br>
+        <div class="caixa" :class="['circulo', nomeDaClasse,  {verde: aplicarCor} ]"></div>
     </div>
 
     
@@ -85,7 +120,9 @@
                 y: '',
                 nome2: '',
                 primeiroNome: 'Guilherme',
-                ultimoNome: 'Karam'
+                ultimoNome: 'Karam',
+                aplicarCor: false,
+                nomeDaClasse: ''
             },
             computed: {
                 mensagemInvertida: function() {
@@ -99,6 +136,13 @@
                         var nome = novoNome.split(' ') // quebrar a string quando tiver um espaço
                         this.primeiroNome = nome[0];
                         this.ultimoNome = nome[nome.length - 1];
+                    }
+                },
+                classesCSS: function() {
+                    return{
+                        azul: this.aplicarCor,
+                        verde:  !this.aplicarCor,
+                        circulo: this.aplicarCor
                     }
                 }
             },
