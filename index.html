@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,37 +12,49 @@
             display: inline-block;
             background-color: brown;
         }
+
         .coral {
             background-color: cadetblue;
         }
+
         .verde {
             background-color: green;
         }
+
         .azul {
             background-color: blue;
         }
+
         .circulo {
             border-radius: 100%;
+        }
+
+        .dinamicoCSS {
+            display: inline-block;
+            margin-right: 10px;
+            background-color: gray;
         }
     </style>
 
     <title>Teste Vue.js </title>
 </head>
+
 <body>
 
     <div id='app'>
         <p> {{mensagem}} </p>
-        <p v-once> Meu nome é : {{nome}}  </p>
+        <p v-once> Meu nome é : {{nome}} </p>
         <input v-on:input="mudarNome"> <!-- Passa um método para pegar o valor do nome -->
-        <p> <a v-bind:href="docs"> Vue.js </a> </p> <!-- acessando site com um link do atributo docs -->    
-        
+        <p> <a v-bind:href="docs"> Vue.js </a> </p> <!-- acessando site com um link do atributo docs -->
+
         <p v-once> Nome: {{ nome }} </p> <!-- O valor nao muda com o v-once-->
         <p> Nome inteiro: {{ getNome() }} </p>
-        <p v-html="htmlPuro"> </p> <!--transforma em html puro -->
+        <p v-html="htmlPuro"> </p>
+        <!--transforma em html puro -->
 
         <button v-on:click="incrementar"> Clique aqui </button> <!-- manipula os clique com o v-on-->
         <p> Botao clicado {{cliques}} vezes </p>
-        <p v-on:mousemove="incrementarCoordenadas"> Coordenadas X: {{ x }} e Coordenadas Y: {{ y }} </p> 
+        <p v-on:mousemove="incrementarCoordenadas"> Coordenadas X: {{ x }} e Coordenadas Y: {{ y }} </p>
         <!-- ao passar o mouse nas letras ele vai dizendo as coordenadas-->
 
         <input v-on:blur="exibirNome('Meu nome é: ', $event)">
@@ -49,7 +62,8 @@
 
         <p v-on:click="onClick('p', $event)">
             Curso Vue.js
-        <button v-on:click.stop="onClick('button', $event)"> CLique </button> <!--.stop não propaga até o elemento pai-->
+            <button v-on:click.stop="onClick('button', $event)"> CLique </button>
+            <!--.stop não propaga até o elemento pai-->
         </p>
 
         <form>
@@ -60,24 +74,28 @@
         <br>
 
         <!-- Modificadores de tecla -->
-        <input v-on:keyup="onKey" placeholder="Qualquer teclas"> 
+        <input v-on:keyup="onKey" placeholder="Qualquer teclas">
         <br>
         <input v-on:keyup.enter="onKey" placeholder="Tecla enter">
         <br>
         <input v-on:keyup.arrow-up="onKey" placeholder="Tecla para cima">
         <br>
-        <input v-on:keyup.ctrl.enter.exact="onKey" placeholder="Somente as tecla ctrl + enter"> <!-- .exact pega somente as teclas desejadas -->
+        <input v-on:keyup.ctrl.enter.exact="onKey" placeholder="Somente as tecla ctrl + enter">
+        <!-- .exact pega somente as teclas desejadas -->
         <br>
 
         <!-- Modificadores do mouse -->
-        <p> <button v-on:click="modificadorMouse"> Botão esquerdo </button> 
-        <button v-on:click.middle="modificadorMouse"> Botão scroll </button> <!--.middle faz somente o botao do meio do mouse funcione -->
-        <button v-on:click.right="modificadorMouse"> Botão direito </button>
-        <button v-on:click.right.prevent="modificadorMouse"> Botão direito </button> <!-- .prevent deixa sem menu de contexto -->
+        <p> <button v-on:click="modificadorMouse"> Botão esquerdo </button>
+            <button v-on:click.middle="modificadorMouse"> Botão scroll </button>
+            <!--.middle faz somente o botao do meio do mouse funcione -->
+            <button v-on:click.right="modificadorMouse"> Botão direito </button>
+            <button v-on:click.right.prevent="modificadorMouse"> Botão direito </button>
+            <!-- .prevent deixa sem menu de contexto -->
         </p>
-        
+
         <!-- Dados computados -->
-        <p> {{ mensagem }} => {{ mensagem.split('').reverse().join('') }} </p> <!-- .split pega as letras e poe num array e .join junta tudo -->
+        <p> {{ mensagem }} => {{ mensagem.split('').reverse().join('') }} </p>
+        <!-- .split pega as letras e poe num array e .join junta tudo -->
         <p> {{ mensagem }} => {{ mensagemInvertida }}</p>
         <input @keyup.enter="alterarMensagem">
         <br>
@@ -100,10 +118,20 @@
         <br>
 
         <br>
-        <div class="caixa" :class="['circulo', nomeDaClasse,  {verde: aplicarCor} ]"></div>
+        <div class="caixa" :class="[ 'circulo', nomeDaClasse,  {verde: aplicarCor} ]"></div>
+
+        <div 
+        class="dinamicoCSS" 
+        style="height: 200px; width: 200px;" 
+        :style="{'background-color': cor, height: tamanho + 'px'}">
+        </div>
+        <div :style="estilosCSS"></div>
+        <div :style="[ estilosCSS, { border: '2px solid black', 'background-color': 'blue' } ]"></div>
+        <input v-model="cor" placeholder="Cor">
+        <input v-model.number="tamanho" placeholder="Tamanho em px">
     </div>
 
-    
+
     <script>
         new Vue({
             el: '#app',
@@ -122,82 +150,91 @@
                 primeiroNome: 'Guilherme',
                 ultimoNome: 'Karam',
                 aplicarCor: false,
-                nomeDaClasse: ''
+                nomeDaClasse: '',
+                cor: '',
+                tamanho: 200
             },
             computed: {
-                mensagemInvertida: function() {
+                mensagemInvertida: function () {
                     return this.mensagem.split('').reverse().join('');
                 },
                 nomeCompleto: {
-                    get: function() {
+                    get: function () {
                         return this.primeiroNome + ' ' + this.ultimoNome;
                     },
-                    set: function(novoNome) {
+                    set: function (novoNome) {
                         var nome = novoNome.split(' ') // quebrar a string quando tiver um espaço
                         this.primeiroNome = nome[0];
                         this.ultimoNome = nome[nome.length - 1];
                     }
                 },
-                classesCSS: function() {
-                    return{
+                classesCSS: function () {
+                    return {
                         azul: this.aplicarCor,
-                        verde:  !this.aplicarCor,
+                        verde: !this.aplicarCor,
                         circulo: this.aplicarCor
                     }
+                },
+                estilosCSS: function () {
+                    return {
+                        'background-color': this.cor,
+                        height: (this.tamanho) + 'px',
+                        width: '100px'
+                    };
                 }
             },
             watch: {
-                mensagemCompleta: function(novaMensagemCompleta, antigaMensagemCompleta) {
+                mensagemCompleta: function (novaMensagemCompleta, antigaMensagemCompleta) {
                     var vm = this;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         vm.mensagemCompleta = 'Java é bem melhor!';
                     }, 3000);
                 }
             },
             methods: {
-                mudarNome: function(event) {
+                mudarNome: function (event) {
                     this.nome = event.target.value;
                 },
-                getNome: function() {
+                getNome: function () {
                     this.nome = "Guilherme Karam";
                     return this.nome;
                 },
-                incrementar: function(event) {
+                incrementar: function (event) {
                     this.cliques++;
                 },
-                incrementarCoordenadas: function(event) {
+                incrementarCoordenadas: function (event) {
                     this.x = event.x;
                     this.y = event.y;
                 },
-                exibirNome: function(texto, event) {
+                exibirNome: function (texto, event) {
                     this.nome2 = texto + event.target.value;
                 },
-                onClick: function(elementoAlvo, event) {
+                onClick: function (elementoAlvo, event) {
                     // event.stopPropagation(); Evento não se propaga até o elemento pai
                     console.log(event.type, ' : ', elementoAlvo);
                 },
-                onSubmit: function() {
+                onSubmit: function () {
                     console.log('Formulário Enviado!');
                 },
-                onKey: function(event) {
+                onKey: function (event) {
                     console.log('Tecla', event.key, 'pressionada!');
                 },
-                modificadorMouse: function(event) {
+                modificadorMouse: function (event) {
                     console.log('Botão ', event.button, ' pressionada!');
                 },
-                alterarMensagem: function(event) {
+                alterarMensagem: function (event) {
                     this.mensagem = event.target.value;
                 },
-                alterarMensagemCompleta: function(event) {
+                alterarMensagemCompleta: function (event) {
                     this.mensagemCompleta = 'GK';
                 },
-                alterarNome: function(event) {
+                alterarNome: function (event) {
                     this.nomeCompleto = event.target.value;
                 }
-
             }
         });
 
     </script>
 </body>
+
 </html>
